@@ -278,32 +278,25 @@ def partition(pivot,arr,low,high):
 	return ( i+1 ) 
 
 
-def rec_sol(J,ini,end,ao,bo,A,B):
-	print('rec_sol')
-	print('J:',J)
-	#pivot = median_of_medians(J[ini:end])# O(n)
-	pivot = custom_pivot(ao,bo,A,B,J[ini:end])
-	print('custom_pivot:',pivot)
-	print('ini:',ini)
-	print('end:',end)
+def rec_sol(ab,ini,end,ao,bo,A,B):
+	pivot = median_of_medians(ab[ini:end])# O(n)
+	#pivot = custom_pivot(ao,bo,A,B,J[ini:end])
 	
-	#pivot_local = my_partition(pivot,J,ini,end-1)
-	pivot_local = partition(pivot,J,ini,end-1)
-	print('pivot_local:',pivot_local)
-	print(J)
+	pivot_local = partition(pivot,ab,ini,end-1)
+	
 	a = ao;
 	b = bo;
 	for k in range(pivot_local):
-		a += A[J[k][1]]
-		b += B[J[k][1]]
+		a += A[ab[k][1]]
+		b += B[ab[k][1]]
 	rs = a/b
-	r = J[pivot_local-1][0]
+	r = ab[pivot_local-1][0]
 
 	#Trabalha so com metade, como na mochila
 	if (r < rs):
-		return rec_sol(J,ini,pivot_local-1,ao,bo,A,B);
+		return rec_sol(ab,ini,pivot_local-1,ao,bo,A,B);
 	if (r > rs):
-		return rec_sol(J,pivot_local+1,end,ao,bo,A,B);
+		return rec_sol(ab,pivot_local+1,end,ao,bo,A,B);
 	return end;
 
 def algoritmo3(A,B):
