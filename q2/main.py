@@ -40,9 +40,8 @@ def alg1(A,B):
 	razao1 = ab[0][0]#na pos 0, pegue o indice 0 da tuple, que é a razão 
 	R_star = razao1 # variavel para encontra R*
 	#lista de indice com N elementos
-	S_star = [] # S*
 	S = []
-	x = []
+
 	for i in range(1,len(A)+1):
 		S.insert(i,0)
 
@@ -124,8 +123,7 @@ def rec_sol(J,ab,ini,end,ao,bo,A,B,l):
 		slice_ab = ab[0:end]
 
 		#pivot = median_of_medians(J[ini:end])# O(n)
-
-		pivot = find_i_th_smallest( slice_ab,int((len(slice_ab) - 1) / 2))
+		pivot = find_i_th_smallest( slice_ab,(len(slice_ab) - 1) / 2)
 		
 		#pivot = pivot[0]
 	elif(l=='2'):
@@ -200,28 +198,69 @@ def alg3(A,B,l = '1'):
 
 
 def main():
-	#from readpph import getData
-	#a,b,_,_,_ = getData()
+	from readpph import getData
+	a,b,_,_,_ = getData("pph_100_01.dat")
 	#a = [363,369,-376,131,-302,0]
 	#b = [519, -153, -786, -162, 559, -53]
 	#a = [1,4,8,1]
 	#b = [3,2,4,5]
-	a = [1,4,8,1,1,1,1,1]
-	b = [3,2,4,5,5,5,5,5]
+	#a = [1,4,8,1,1,1,1,1]
+	#b = [3,2,4,5,5,5,5,5]
 	
 	
 	#
 	# Instanciano a CPU timer  
 	timer = CPUtimer.CPUTimer()
 	
-
+	print("")
 	timer.reset()
 	timer.start()
+
 	#codigo
+	print("Algoritmo 1:")
 	alg1(a,b)
 	#
 
 	timer.stop()
+	# Imprimindo resultados de diversas formas
+	print("Tempo Total: " + str( timer.get_time() ) +" s")
+	print("Tempo Medio: " + str( timer.get_time("average","micro") ) +" \u00B5s")
+	print("Ultima Chamada: " + str( timer.get_time("last","micro") ) +" \u00B5s")
+	print("Estampa 1 do total: " + str( timer.get_stamp("total","si") ) ) 
+	print("Estampa 2 do total: " + str( timer.get_stamp("total","clock") ) )
+
+
+	timer.reset()
+	timer.start()
+	#codigo
+	print("Algoritmo 3:")
+	alg3(a,b,l='1')
+	#
+	timer.stop()
+	# Imprimindo resultados de diversas formas
+	print("Tempo Total: " + str( timer.get_time() ) +" s")
+	print("Tempo Medio: " + str( timer.get_time("average","micro") ) +" \u00B5s")
+	print("Ultima Chamada: " + str( timer.get_time("last","micro") ) +" \u00B5s")
+	print("Estampa 1 do total: " + str( timer.get_stamp("total","si") ) ) 
+	print("Estampa 2 do total: " + str( timer.get_stamp("total","clock") ) )
+
+
+
+	timer.reset()
+	timer.start()
+	#codigo
+	alg3(a,b,l='2')
+	#
+	print("Algoritmo 4:")
+	timer.stop()
+	# Imprimindo resultados de diversas formas
+	print("Tempo Total: " + str( timer.get_time() ) +" s")
+	print("Tempo Medio: " + str( timer.get_time("average","micro") ) +" \u00B5s")
+	print("Ultima Chamada: " + str( timer.get_time("last","micro") ) +" \u00B5s")
+	print("Estampa 1 do total: " + str( timer.get_stamp("total","si") ) ) 
+	print("Estampa 2 do total: " + str( timer.get_stamp("total","clock") ) )
+
+
 
 
 main()
