@@ -1,6 +1,6 @@
 import CPUtimer
 from part import *
-from mmedian import median_of_medians
+from mmedian import *
 
 
 class AB():
@@ -100,25 +100,51 @@ def alg2(A,B):
 	print(J)
 	return rs
 
-def rec_sol(J,ini,end,ao,bo,A,B):
+def custom_pivot(A,B,ini,end,J):
+	a_sum = 0
+	b_sum = 0 
+	for k in range(0,end):
+		print('k:',k)
+		a_sum+=A[J[k][1]]
+		b_sum+=B[J[k][1]]
+		print(a_sum)
+		#print('a:',A[J[k][1]])
+		#print('b:',B[J[k][1]])
+
+	return a_sum/b_sum
+
+def rec_sol(J,ini,end,ao,bo,A,B,l):
 	if(ini > end ):
+		print('final')
 		return end
 	if(ini == len(J)-1):
-		return ini
+
+		return end
 	print('working with: ',end-ini)
 	print('end:',end,' ini:',ini)
-	pivot = median_of_medians(J[ini:end])# O(n)
-	print('pivot med: ',pivot)
-	pivot = pivot[0]
+	if(l=='1'):
+		K=[]
+		for i in range(0,end):
+			K.append(J[i][0])
+		#pivot = median_of_medians(J[ini:end])# O(n)
+
+		pivot = find_i_th_smallest( K,int((len(K) - 1) / 2))
+		print('pivot med: ',pivot)
+		#pivot = pivot[0]
+	elif(l=='2'):
+		pivot = custom_pivot(A,B,ini,end,J)# O(n)
+		print('custom pivot: ',pivot)
 	
-	pivot_local = partition2(pivot,J,ini,end)
+	
+	
+	pivot_local = my_partition(pivot,J,ini,end)
 	print('partitioned J:',J)
 	print('pivot_local:',pivot_local)
 	#print(J)
 	a = ao
 	b = bo
 	for k in range(ini,pivot_local+1):
-		print('k:',k)
+		#print('k:',k)
 		a += A[J[k][1]]
 		b += B[J[k][1]]
 	print(a,b)
@@ -130,12 +156,12 @@ def rec_sol(J,ini,end,ao,bo,A,B):
 	#Trabalha so com metade, como na mochila
 	print('r: ',r, ' rs: ',rs)
 	if (r < rs):
-		return rec_sol(J,ini,pivot_local-1,ao,bo,A,B);
+		return rec_sol(J,ini,pivot_local-1,ao,bo,A,B,l);
 	if (r > rs):
-		return rec_sol(J,pivot_local+1,end,ao,bo,A,B);
+		return rec_sol(J,pivot_local+1,end,ao,bo,A,B,l);
 	return end
 
-def alg3(A,B):
+def alg3(A,B,l = '1'):
 	import sys
 	sys.setrecursionlimit(100)
 	ab = gera_ab(A,B)
@@ -152,14 +178,18 @@ def alg3(A,B):
 	print('J: ',J)
 	#J sera o vetor das razoes onde se fara a busca recursiva. Sempre vai se descartar
 	#metade dele, como na mochila
-	pivot = rec_sol(J,1,len(J)-1,ao,bo,A,B)#o ini deve comecar do 1(ao e bo n contam)
+	pivot = rec_sol(J,1,len(J)-1,ao,bo,A,B,l)#o ini deve comecar do 1(ao e bo n contam)
+	print('final pivot: ',pivot)
 	sum_a = ao
 	sum_b = bo
 	print("[" ,ab[0][1] , ": " , A[ab[0][1]] , "," ,B[ab[0][1]] , ": " ,ab[0][0] ,"]")
-	for k in range(1,pivot):
+	for k in range(1,pivot+1):
 		a_k = A[J[k][1]]
 		b_k = B[J[k][1]]
 		r = (sum_a+a_k)/(sum_b + b_k)
+		print('a_k: ',a_k)
+		print('b_k: ',b_k)
+		print(r)
 		if (a_k/b_k > r):
 			S[k] = 1
 			sum_a += A[J[k][1]];
@@ -175,8 +205,11 @@ def main():
 	#a,b,_,_,_ = getData()
 	#a = [363,369,-376,131,-302,0]
 	#b = [519, -153, -786, -162, 559, -53]
-	a = [1,4,8,1]
-	b = [3,2,4,5]
+	#a = [1,4,8,1]
+	#b = [3,2,4,5]
+	a = [1,4,8,1,1,1,1,1]
+	b = [3,2,4,5,5,5,5,5]
+	
 	print(sum(a)/sum(b))
 	#
 	# Instanciano a CPU timer  
@@ -186,7 +219,7 @@ def main():
 	timer.reset()
 	timer.start()
 	#codigo
-	alg3(a,b)
+	alg3(a,b,l='1')
 	#
 
 	timer.stop()

@@ -12,17 +12,20 @@ def partition(pivot,l, low, high):
 def partition2(pivot,arr,low,high): 
 	i = ( low-1 )         # index of smaller element 
 	#pivot = arr[high]     # pivot 
-
+	print('arr:',arr)
 	for j in range(low , high): 
+		print('j:',j)
+		print(pivot)
+		print(arr[j][0])
 		# If current element is smaller than or 
 		# equal to pivot 
-		if   arr[j][0] <= pivot: 
+		if  arr[j][0] <= pivot: 
 			# increment index of smaller element 
 			i = i+1 
 			arr[i],arr[j] = arr[j],arr[i] 
 
 	arr[i+1],arr[high] = arr[high],arr[i+1] 
-	return i 
+	return i
 
 def my_partition( pivot, a_b,_i, _j):
     i = _i
