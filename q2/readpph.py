@@ -8,11 +8,10 @@ from sys import argv
 
 ##############################################################################3
 #Importar Arquivo de entrada
-with open("pph_100_01.dat") as f: # Abre, lê e fecha o arquivo de entrada
-    texto = f.readlines()
+
 
 #Converte dados de entrada ai e bi de txt em integer
-def convert(ini,fim):
+def convert(ini,fim,texto):
     lista = [ ]
     for i in range(ini,fim):
         z1 = texto[i]
@@ -27,7 +26,9 @@ def convert(ini,fim):
 
 ##############################################################################
 # Define,converte e inicia variáveis de entrada
-def getData():
+def getData(datapath):
+    with open(datapath) as f: # Abre, lê e fecha o arquivo de entrada
+        texto = f.readlines()
     a2 = [ ]
     b2 = [ ]
     z0 = texto[0]
@@ -45,8 +46,8 @@ def getData():
     b0 = int(b0)
     abi = [ ]#exc
     # Converte os valores de ai e bi em integer
-    ai = convert(1,n+1)
-    bi = convert(n+2,2*n+2)
+    ai = convert(1,n+1,texto)
+    bi = convert(n+2,2*n+2,texto)
 
     # Retira valor 0 do denominador
     for w in range(0,z0): 

@@ -35,32 +35,33 @@ def gera_ab(A,B):
 		vec.append((A[i]/B[i],i))
 	return vec
 
-def alg1(A,B,sol = False):
+def alg1(A,B):
 	ab = gera_ab(A,B)
 	razao1 = ab[0][0]#na pos 0, pegue o indice 0 da tuple, que é a razão 
 	R_star = razao1 # variavel para encontra R*
 	#lista de indice com N elementos
+	S_star = [] # S*
 	S = []
-
+	x = []
 	for i in range(1,len(A)+1):
 		S.insert(i,0)
 
 	cond = True
 	while(1):#enquanto houver um elemento que caia num dos dois casos. O(n)
 		cond = True #Enquanto houver alguem em S que satisfaz as 2 condicoes, o alg continua rodando
-		
-		
+		print('S:',S)
+		print('R_star:',R_star)
 		for i in range(1,len(S)): # O(n)
 
 			#Se tiver um cara fora de S que tiver razao maior que R*, entao ele tem que ser inserido 
 			if S[i] == 0  and ab[i][0] > R_star: # O(1)
-				
+				print('ab[i][0]:',ab[i][0])
 				S[i] = 1
 				cond = False
 				break
 			#Se tiver um cara em S que tem razao menor que R*, entao ele tem que sair 
 			elif S[i] == 1  and ab[i][0] < R_star: #nao satisfaz o lema
-				
+				print('ab[i][0]:',ab[i][0])
 				S[i] = 0
 				cond = False
 				break
@@ -69,11 +70,10 @@ def alg1(A,B,sol = False):
 		R_star = update(A,B,S)
 
 	#Ao fim do algoritmo, somente os valores otimos devem ficar em S, sendo assim o S*
-	if(sol):
-		print('S: ',S)
-	
+	print('S_star: ',S)
+	print('R_star: ',R_star)
 
-def alg2(A,B,sol = False):
+def alg2(A,B):
 	ab = gera_ab(A,B)
 	J = []
 	for x in range(len(ab)):
@@ -93,76 +93,76 @@ def alg2(A,B,sol = False):
 			sum_b += B[k];
 			J[i] = 1
 		i+=1
-	rs = sum_a/sum_b;	
+	rs = sum_a/sum_b;
+	for k in range(i):
+		print("[" ,ab[k][1] , ": " , A[ab[k][1]] , "," ,B[ab[k][1]] , ": " ,ab[k][0] ,"]")
 
-	
+	print(J)
 	return rs
 
 def custom_pivot(A,B,ini,end,J):
 	a_sum = 0
 	b_sum = 0 
 	for k in range(0,end):
-		
+		print('k:',k)
 		a_sum+=A[J[k][1]]
 		b_sum+=B[J[k][1]]
-		
-		#
-		#
+		print(a_sum)
+		#print('a:',A[J[k][1]])
+		#print('b:',B[J[k][1]])
 
 	return a_sum/b_sum
 
 def rec_sol(J,ab,ini,end,ao,bo,A,B,l):
 	if(ini > end ):
-		
+		print('final')
 		return end
 	if(ini == len(J)-1):
 
 		return end
-	
-	
+	print('working with: ',end-ini)
+	print('end:',end,' ini:',ini)
 	if(l=='1'):
 		slice_ab = ab[0:end]
 
 		#pivot = median_of_medians(J[ini:end])# O(n)
-		#pivot = find_i_th_smallest( slice_ab,(len(slice_ab) - 1) / 2)
-		#pivot = mm( slice_ab,(len(slice_ab) - 1) / 2)
-		#pivot = select(slice_ab,(len(slice_ab) - 1) / 2)
-		pivot = mediana_das_medianas(slice_ab)
-		
+
+		pivot = find_i_th_smallest( slice_ab,int((len(slice_ab) - 1) / 2))
+		print('pivot med: ',pivot)
 		#pivot = pivot[0]
 	elif(l=='2'):
 		pivot = custom_pivot(A,B,ini,end,J)# O(n)
-		
+		print('custom pivot: ',pivot)
 	
 	
 	
 	pivot_local = my_partition(pivot,J,ini,end)
-	
-	
-	#
+	print('partitioned J:',J)
+	print('pivot_local:',pivot_local)
+	#print(J)
 	a = ao
 	b = bo
 	for k in range(ini,pivot_local+1):
-		#
+		#print('k:',k)
 		a += A[J[k][1]]
 		b += B[J[k][1]]
-	
+	print(a,b)
 	rs = a/b
 	r = A[J[pivot_local][1]] / B[J[pivot_local][1]]
 	#r = J[pivot_local-1][0]
-	
+	print(J[pivot_local])
 
 	#Trabalha so com metade, como na mochila
-	
+	print('r: ',r, ' rs: ',rs)
 	if (r < rs):
 		return rec_sol(J,ab,ini,pivot_local-1,ao,bo,A,B,l);
 	if (r > rs):
 		return rec_sol(J,ab,pivot_local+1,end,ao,bo,A,B,l);
 	return end
 
-def alg3(A,B,l = '1',sol = False):
+def alg3(A,B,l = '1'):
 	import sys
-	sys.setrecursionlimit(1000)
+	sys.setrecursionlimit(100)
 	J = []
 	S = []
 
@@ -175,114 +175,55 @@ def alg3(A,B,l = '1',sol = False):
 	
 	for i in range(0,len(ab)):
 		S.append(0)
-	
+	print('J: ',J)
 	#J sera o vetor das razoes onde se fara a busca recursiva. Sempre vai se descartar
 	#metade dele, como na mochila
 	pivot = rec_sol(J,ab,1,len(J)-1,ao,bo,A,B,l)#o ini deve comecar do 1(ao e bo n contam)
-	
+	print('final pivot: ',pivot)
 	sum_a = ao
 	sum_b = bo
 	J = J
-	
+	print("[" ,J[0][1] , ": " , A[J[0][1]] , "," ,B[J[0][1]] , ": " ,J[0][0] ,"]")
 	for k in range(1,pivot+1):
 		a_k = A[J[k][1]]
 		b_k = B[J[k][1]]
 		r = (sum_a+a_k)/(sum_b + b_k)
-		
-		
-		
+		print('a_k: ',a_k)
+		print('b_k: ',b_k)
+		print(r)
 		if (a_k/b_k > r):
 			S[k] = 1
 			sum_a += A[J[k][1]];
 			sum_b += B[J[k][1]];
-			
-	if(sol):
-		print("S: ",S)
+			print("[" ,J[k][1] , ": " , A[J[k][1]] , "," ,B[J[k][1]] , ": " ,J[k][0] ,"]")
+
+	print("S: ",S)
 	rs = sum_a/sum_b
 
 
 def main():
-	from readpph import getData
-	a,b,_,_,_ = getData("pph_500000_01.dat")
+	#from readpph import getData
+	#a,b,_,_,_ = getData()
 	#a = [363,369,-376,131,-302,0]
 	#b = [519, -153, -786, -162, 559, -53]
 	#a = [1,4,8,1]
 	#b = [3,2,4,5]
-	#a = [1,4,8,1,1,1,1,1]
-	#b = [3,2,4,5,5,5,5,5]
+	a = [1,4,8,1,1,1,1,1]
+	b = [3,2,4,5,5,5,5,5]
 	
-	
+	print(sum(a)/sum(b))
 	#
 	# Instanciano a CPU timer  
 	timer = CPUtimer.CPUTimer()
-	
-	print("")
-	timer.reset()
-	timer.start()
-
-	#codigo
-	print("Algoritmo 1:")
-	alg1(a,b,sol = False)
-	#
-
-	timer.stop()
-	# Imprimindo resultados de diversas formas
-	print("Tempo Total: " + str( timer.get_time() ) +" s")
-	print("Tempo Medio: " + str( timer.get_time("average","micro") ) +" \u00B5s")
-	print("Ultima Chamada: " + str( timer.get_time("last","micro") ) +" \u00B5s")
-	print("Estampa 1 do total: " + str( timer.get_stamp("total","si") ) ) 
-	print("Estampa 2 do total: " + str( timer.get_stamp("total","clock") ) )
-
-
-	timer.reset()
-	timer.start()
-
-	#codigo
-	print("Algoritmo 2:")
-	alg2(a,b,sol = False)
-	#
-
-	timer.stop()
-	# Imprimindo resultados de diversas formas
-	print("Tempo Total: " + str( timer.get_time() ) +" s")
-	print("Tempo Medio: " + str( timer.get_time("average","micro") ) +" \u00B5s")
-	print("Ultima Chamada: " + str( timer.get_time("last","micro") ) +" \u00B5s")
-	print("Estampa 1 do total: " + str( timer.get_stamp("total","si") ) ) 
-	print("Estampa 2 do total: " + str( timer.get_stamp("total","clock") ) )
-
-
+	print('Result of search: ')
 
 	timer.reset()
 	timer.start()
 	#codigo
-	print("Algoritmo 3:")
-	alg3(a,b,l='1',sol = False)
+	alg3(a,b,l='2')
 	#
+
 	timer.stop()
-	# Imprimindo resultados de diversas formas
-	print("Tempo Total: " + str( timer.get_time() ) +" s")
-	print("Tempo Medio: " + str( timer.get_time("average","micro") ) +" \u00B5s")
-	print("Ultima Chamada: " + str( timer.get_time("last","micro") ) +" \u00B5s")
-	print("Estampa 1 do total: " + str( timer.get_stamp("total","si") ) ) 
-	print("Estampa 2 do total: " + str( timer.get_stamp("total","clock") ) )
-
-
-
-	timer.reset()
-	timer.start()
-	#codigo
-	alg3(a,b,l='2',sol = False)
-	#
-	print("Algoritmo 4:")
-	timer.stop()
-	# Imprimindo resultados de diversas formas
-	print("Tempo Total: " + str( timer.get_time() ) +" s")
-	print("Tempo Medio: " + str( timer.get_time("average","micro") ) +" \u00B5s")
-	print("Ultima Chamada: " + str( timer.get_time("last","micro") ) +" \u00B5s")
-	print("Estampa 1 do total: " + str( timer.get_stamp("total","si") ) ) 
-	print("Estampa 2 do total: " + str( timer.get_stamp("total","clock") ) )
-
-
 
 
 main()
