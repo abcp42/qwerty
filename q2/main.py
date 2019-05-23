@@ -35,7 +35,7 @@ def gera_ab(A,B):
 		vec.append((A[i]/B[i],i))
 	return vec
 
-def alg1(A,B):
+def alg1(A,B,sol = False):
 	ab = gera_ab(A,B)
 	razao1 = ab[0][0]#na pos 0, pegue o indice 0 da tuple, que é a razão 
 	R_star = razao1 # variavel para encontra R*
@@ -69,10 +69,11 @@ def alg1(A,B):
 		R_star = update(A,B,S)
 
 	#Ao fim do algoritmo, somente os valores otimos devem ficar em S, sendo assim o S*
-	print('S: ',S)
+	if(sol):
+		print('S: ',S)
 	
 
-def alg2(A,B):
+def alg2(A,B,sol = False):
 	ab = gera_ab(A,B)
 	J = []
 	for x in range(len(ab)):
@@ -156,7 +157,7 @@ def rec_sol(J,ab,ini,end,ao,bo,A,B,l):
 		return rec_sol(J,ab,pivot_local+1,end,ao,bo,A,B,l);
 	return end
 
-def alg3(A,B,l = '1'):
+def alg3(A,B,l = '1',sol = False):
 	import sys
 	sys.setrecursionlimit(100)
 	J = []
@@ -192,14 +193,14 @@ def alg3(A,B,l = '1'):
 			sum_a += A[J[k][1]];
 			sum_b += B[J[k][1]];
 			
-
-	print("S: ",S)
+	if(sol):
+		print("S: ",S)
 	rs = sum_a/sum_b
 
 
 def main():
 	from readpph import getData
-	a,b,_,_,_ = getData("pph_100_01.dat")
+	a,b,_,_,_ = getData("pph_10000_01.dat")
 	#a = [363,369,-376,131,-302,0]
 	#b = [519, -153, -786, -162, 559, -53]
 	#a = [1,4,8,1]
@@ -218,7 +219,7 @@ def main():
 
 	#codigo
 	print("Algoritmo 1:")
-	alg1(a,b)
+	alg1(a,b,sol = False)
 	#
 
 	timer.stop()
@@ -234,7 +235,7 @@ def main():
 	timer.start()
 	#codigo
 	print("Algoritmo 3:")
-	alg3(a,b,l='1')
+	alg3(a,b,l='1',sol = False)
 	#
 	timer.stop()
 	# Imprimindo resultados de diversas formas
@@ -249,7 +250,7 @@ def main():
 	timer.reset()
 	timer.start()
 	#codigo
-	alg3(a,b,l='2')
+	alg3(a,b,l='2',sol = False)
 	#
 	print("Algoritmo 4:")
 	timer.stop()
