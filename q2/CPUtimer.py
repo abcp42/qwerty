@@ -158,8 +158,9 @@ class CPUTimer:
                 
         elif reference == "average" or reference == "avg" or reference == "a":
             if self.detail_level > 0:
-                for t in self.times:
-                    ret = ( ret + t ) / 2
+                ret = sum(self.times)/len(self.times)
+                #for t in self.times:
+                #    ret = ( ret + t ) / 2
             else:
                 ret = self.avarage
             
