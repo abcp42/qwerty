@@ -1,6 +1,7 @@
 from file_reader import readSTP
 import pickle
 import time
+import CPUtimer
 
 class Vertice():
   def __init__(self):
@@ -60,6 +61,12 @@ def print_solution(vertice_list,nV,parent,src):
     print('')
 
 def dijkstra(vertice_list,src,num_ver):
+  
+
+  timer = CPUtimer.CPUTimer()
+  timer.reset()
+  cond = False
+  
   #from min import get_min_distance
   parent = []
   #marca todos os vertices como nao visitados
@@ -74,12 +81,14 @@ def dijkstra(vertice_list,src,num_ver):
     #print('getting min distance...')
     #start = time.time()
     v_min = get_min_dist(vertice_list,num_ver)# 1.1 O(n)
-    #v_min = get_min_dist(vertice_list,num_ver)
-    #end = time. time()
-    #print('getmin: ',end - start)
-    #print(v_min.id)
-    #print('got min distance!')
-    print("num of vert left: ",num_ver-j)
+    if(j%100==0):
+      if(cond):
+        timer.stop()
+        print("Tempo Medio: " + str( timer.get_time("average","ms") ) +" ms")
+        cond = False
+      timer.start()
+      print("num of vert left: ",num_ver-j)
+      cond = True
     if(v_min==None):
       continue
     v_min.visited=1#marque vertice minimo como ja visitado. Desse modo o 1.2 sera feito, pois nao sera mais contado
@@ -90,21 +99,23 @@ def dijkstra(vertice_list,src,num_ver):
       #Se a distancia atual do vertice minimo, mais o seu peso, for menor que a distancia do vert adjacente
       if(v_min.dist + v_min.weights[key] < adj_ver.dist ):
         adj_ver.dist = v_min.dist + v_min.weights[key] #a distancia do vertice adjacente tera esse novo valor
-        parent[adj_ver.id] = v_min.id # a pos que era do vertice adjacente, sera do menor v agora
+        #marca como visitado
+        parent[adj_ver.id] = v_min.id # a pos que era do vertice adjacente, sera do menor v agora(salvando para printar caminho)
 
-    #end = time. time()
-    #print('forloop: ',end - start)
-
-    
   print_solution(vertice_list,len(vertice_list),parent,src)    
 
 
-
+[]
 vertice_list = []
 #e = [(1,2,7),(1,3,9),(1,6,14),(2,3,10),(2,4,15),(3,4,11),(3,6,2),(4,5,6),(5,6,9)]
 #vertices = [1,2,3,4,5,6]
-#e,vertices = readSTP()
-vertices,e = pickle.load( open( "vert_arestas2.p", "rb" ) )
+#vertices,e = readSTP("USA-road-d.NY.gr")
+#vertices,e = readSTP("USA-road-d.BAY.gr")
+#vertices,e = readSTP("USA-road-d.COL.gr")
+vertices,e = readSTP("USA-road-d.FLA.gr")
+#vertices,e = readSTP("USA-road-d.CAL.gr")
+
+#vertices,e = pickle.load( open( "vert_arestas2.p", "rb" ) )
 for i in range(len(vertices)):
   vertice_list.append(create_node_vertice(i,len(vertices))) #crie vertices cada um com sua lista de vertices
 vertices = []
@@ -119,13 +130,18 @@ for i in range(len(e)):
 #pickle.dump( vertice_list, open( "vertice_list.p", "wb" ) )
 
 print("Dijkstra!!!")
-dijkstra(vertice_list, 0, len(vertice_list))
 
-"""
-for i in range(vertices):
-  print("ver:",vertice_list[i].id+1)
-  ver = vertice_list[i]
-  for j in range(ver.adj_vert_num):
-    print('adjs:',ver.adjs[j].id+1)
-    print('weight:',ver.weights[j])
-"""
+timer = CPUtimer.CPUTimer()
+timer.reset()
+#timer.start()
+#codigo
+print("Begin timer:")
+timer.start()
+dijkstra(vertice_list, 0, len(vertice_list))
+timer.stop()
+# Imprimindo resultados de diversas formas
+print("Tempo Total: " + str( timer.get_time() ) +" s")
+print("Tempo Medio: " + str( timer.get_time("average","ms") ) +" ms")
+print("Ultima Chamada: " + str( timer.get_time("last","ms") ) +" ms")
+print("Estampa 1 do total: " + str( timer.get_stamp("total","si") ) ) 
+print("Estampa 2 do total: " + str( timer.get_stamp("total","clock") ) )

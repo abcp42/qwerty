@@ -1,5 +1,8 @@
 import pickle
 import time
+from file_reader import readSTP
+import CPUtimer
+
 
 class Vertice():
   def __init__(self):
@@ -72,7 +75,7 @@ def dijkstra(vertice_list,src,num_ver):
   while(f.total_nodes!=0):
   #while(i<10):
     i+=1
-    print(i)
+    #print(i)
     v_min_node = f.extract_min()# 1.1
     #print('key:',v_min_node.key)
     #print("Nodes:",f.total_nodes)
@@ -99,7 +102,13 @@ vertice_list = []
 #e = [(1,2,7),(1,3,9),(1,6,14),(2,3,10),(2,4,15),(3,4,11),(3,6,2),(4,5,6),(5,6,9)]
 #vertices = [1,2,3,4,5,6]
 #e,vertices = readSTP()
-vertices,e = pickle.load( open( "vert_arestas2.p", "rb" ) )
+#vertices,e = pickle.load( open( "vert_arestas2.p", "rb" ) )
+#vertices,e = readSTP("USA-road-d.NY.gr")
+#vertices,e = readSTP("USA-road-d.BAY.gr")
+#vertices,e = readSTP("USA-road-d.COL.gr")
+vertices,e = readSTP("USA-road-d.FLA.gr")
+#vertices,e = readSTP("USA-road-d.CAL.gr")
+
 for i in range(len(vertices)):
   vertice_list.append(create_node_vertice(i,len(vertices))) #crie vertices cada um com sua lista de vertices
 vertices = []
@@ -114,13 +123,19 @@ for i in range(len(e)):
 #pickle.dump( vertice_list, open( "vertice_list.p", "wb" ) )
 
 print("Dijkstra!!!")
-dijkstra(vertice_list, 0, len(vertice_list))
+timer = CPUtimer.CPUTimer()
+timer.reset()
+#timer.start()
+#codigo
+print("Begin timer:")
 
-"""
-for i in range(vertices):
-  print("ver:",vertice_list[i].id+1)
-  ver = vertice_list[i]
-  for j in range(ver.adj_vert_num):
-    print('adjs:',ver.adjs[j].id+1)
-    print('weight:',ver.weights[j])
-"""
+timer.start()
+dijkstra(vertice_list, 0, len(vertice_list))
+timer.stop()
+
+print("Tempo Total: " + str( timer.get_time() ) +" s")
+print("Tempo Medio: " + str( timer.get_time("average","ms") ) +" ms")
+print("Ultima Chamada: " + str( timer.get_time("last","ms") ) +" ms")
+print("Estampa 1 do total: " + str( timer.get_stamp("total","si") ) ) 
+print("Estampa 2 do total: " + str( timer.get_stamp("total","clock") ) )
+
