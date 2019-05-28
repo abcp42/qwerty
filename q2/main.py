@@ -106,9 +106,6 @@ def custom_pivot(A,B,ini,end,J):
 		a_sum+=A[J[k][1]]
 		b_sum+=B[J[k][1]]
 		
-		#
-		#
-
 	return a_sum/b_sum
 
 def rec_sol(J,ab,ini,end,ao,bo,A,B,l):
@@ -119,28 +116,19 @@ def rec_sol(J,ab,ini,end,ao,bo,A,B,l):
 
 		return end
 	
-	
+	#median of medians
 	if(l=='1'):
 		slice_ab = ab[0:end]
-
 		#pivot1 = median_of_medians(J[ini:end])# O(n)
 		pivot = find_i_th_smallest( slice_ab,(len(slice_ab)/ 2))
-		#pivot3 = mm( slice_ab,(len(slice_ab) - 1) / 2)
-		#pivot4 = select(slice_ab,(len(slice_ab) - 1) / 2)
-		#pivot5 = mediana_das_medianas(slice_ab) #good
-		#pivot = quickselect(slice_ab,(len(slice_ab) - 1) / 2)
-		#pivot = pick_pivot(slice_ab)
-		#print('slice_ab:',slice_ab)
-		#print(pivot1,pivot2,pivot5)
-		#a = 2/0
-		#pivot = pivot[0]
+	#O(n²), question 4	
 	elif(l=='2'):
 		pivot = custom_pivot(A,B,ini,end,J)# O(n)
-	
+	#Quick Select	
 	elif(l=='3'):
 		slice_ab = ab[0:end]
 		pivot = quickselect(slice_ab,(len(slice_ab) - 1) / 2)
-
+	#IntroSelect
 	elif(l=='4'):
 		slice_ab = ab[0:end]
 		pivot = np.partition(slice_ab, int(len(slice_ab)/2))[int(len(slice_ab)/2)]
@@ -213,7 +201,7 @@ def alg3(A,B,l = '1',sol = False):
 
 def main():
 	from readpph import getData
-	a,b,_,_,_ = getData("pph_10000000_01.dat")
+	a,b,_,_,_ = getData("pph_1000000_01.dat")
 	#a = [363,369,-376,131,-302,0]
 	#b = [519, -153, -786, -162, 559, -53]
 	#a = [1,4,8,1]
@@ -232,12 +220,12 @@ def main():
 	c = 0
 	s = 0
 	#codigo
-	print("Algoritmo 1:")
+	print("Algoritmo 1: O(n2)")
 	mintime = 5
 	"""
 	while( timer.get_time() < mintime ):
 		timer.start()
-		#alg1(a,b,sol = False)
+		alg1(a,b,sol = False)
 		timer.stop()
 		#s+=timer.get_time()
 		#c+=
@@ -252,15 +240,15 @@ def main():
 	print("Estampa 1 do total: " + str( timer.get_stamp("total","si") ) ) 
 	print("Estampa 2 do total: " + str( timer.get_stamp("total","clock") ) )
 
+	"""
+	timer.reset()
+	#timer.start()
 	
-	timer.reset()
-	#timer.start()
-
 	#codigo
-	print("Algoritmo 2:")
+	print("Algoritmo 2: nlogn")
 	while( timer.get_time() < mintime ):
 		timer.start()
-		#alg2(a,b,sol = False)
+		alg2(a,b,sol = False)
 		timer.stop()
 
 	# Imprimindo resultados de diversas formas
@@ -271,14 +259,14 @@ def main():
 	print("Estampa 2 do total: " + str( timer.get_stamp("total","clock") ) )
 
 
-
+	"""
 	timer.reset()
 	#timer.start()
 	#codigo
-	print("Algoritmo 3:")
+	print("Algoritmo 3:O(n)")
 	while( timer.get_time() < mintime ):
 		timer.start()
-		#alg3(a,b,l='1',sol = False)
+		alg3(a,b,l='1',sol = False)
 		timer.stop()
 	# Imprimindo resultados de diversas formas
 	print("Tempo Total: " + str( timer.get_time() ) +" s")
@@ -288,14 +276,15 @@ def main():
 	print("Estampa 2 do total: " + str( timer.get_stamp("total","clock") ) )
 
 
-
+	"""
+	"""
 	timer.reset()
 	#timer.start()
 	#codigo
-	print("Algoritmo 4:")
+	print("Algoritmo 4: O(n2)")
 	while( timer.get_time() < mintime ):
 		timer.start()
-		#alg3(a,b,l='2',sol = False)
+		alg3(a,b,l='2',sol = False)
 		timer.stop()
 	# Imprimindo resultados de diversas formas
 	print("Tempo Total: " + str( timer.get_time() ) +" s")
@@ -307,11 +296,13 @@ def main():
 
 	timer.reset()
 	#timer.start()
+	"""
+	"""
 	#codigo
-	print("Algoritmo 5:")
+	print("Algoritmo 5: QuickSelect")
 	while( timer.get_time() < mintime ):
 		timer.start()
-		#alg3(a,b,l='3',sol = False)
+		alg3(a,b,l='3',sol = False)
 		timer.stop()
 	# Imprimindo resultados de diversas formas
 	print("Tempo Total: " + str( timer.get_time() ) +" s")
@@ -322,8 +313,9 @@ def main():
 	"""
 	timer.reset()
 	#timer.start()
+	"""
 	#codigo
-	print("Algoritmo 6:")
+	print("Algoritmo 6: IntroSelect")
 	while( timer.get_time() < mintime ):
 		timer.start()
 		alg3(a,b,l='4',sol = False)
@@ -334,6 +326,6 @@ def main():
 	print("Ultima Chamada: " + str( timer.get_time("last","ms") ) +" ms")
 	print("Estampa 1 do total: " + str( timer.get_stamp("total","si") ) ) 
 	print("Estampa 2 do total: " + str( timer.get_stamp("total","clock") ) )
-
+	"""
 
 main()
